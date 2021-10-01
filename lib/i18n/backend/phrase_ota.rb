@@ -96,7 +96,7 @@ module I18n
           PhraseOta.config.logger.info("Updating translations...")
 
           available_locales.each do |locale|
-            url = "http://localhost:8081/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale.to_s}/yml"
+            url = "#{PhraseOta.config.ota_base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale.to_s}/yml"
             params = {
               app_version: PhraseOta.config.app_version,
               client: "Phrase-OTA-Rails",
