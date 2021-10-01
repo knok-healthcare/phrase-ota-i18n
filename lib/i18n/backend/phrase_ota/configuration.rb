@@ -13,7 +13,7 @@ module I18n
           @secret_token = nil
           @logger = Rails.logger
           @app_version = nil
-          @poll_interval_seconds = 10
+          @poll_interval_seconds = 5
         end
       end
     end
