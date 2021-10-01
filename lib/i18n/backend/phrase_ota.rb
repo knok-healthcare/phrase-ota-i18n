@@ -82,7 +82,7 @@ module I18n
         def start_polling
           Thread.new do
             until stop_polling?
-              sleep(10)
+              sleep(PhraseOta.config.poll_interval_seconds)
               update_translations
             end
           end

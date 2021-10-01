@@ -6,12 +6,14 @@ module I18n
         attr_accessor :secret_token
         attr_accessor :logger
         attr_accessor :app_version
+        attr_accessor :poll_interval_seconds
 
         def initialize
           @distribution_id = nil
           @secret_token = nil
           @logger = Rails.logger
           @app_version = nil
+          @poll_interval_seconds = 10
         end
       end
     end
