@@ -39,9 +39,8 @@ module I18n
           translations[locale].deep_merge!(data)
         end
 
-        # TODO: Implement
         def available_locales
-          [:en, :de]
+          @available_locales || set_available_locales
         end
 
         def reload!
@@ -64,6 +63,10 @@ module I18n
 
         protected
 
+        def set_available_locales
+          @available_locales = translations.keys.map(&:to_sym)
+        end
+
         def lookup(locale, key, scope = [], options = EMPTY_HASH)
           init_translations unless initialized?
           keys = I18n.normalize_keys(locale, key, scope, options[:separator])
@@ -74,8 +77,8 @@ module I18n
               key = key.to_s.to_sym
               return nil unless result.has_key?(key)
             end
-            result = result[_key]
-            result = resolve(locale, _key, result, options.merge(scope: nil)) if result.is_a?(Symbol)
+            result = result[key]
+            result = resolve(locale, key, result, options.merge(scope: nil)) if result.is_a?(Symbol)
             result
           end
         end
