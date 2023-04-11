@@ -79,15 +79,9 @@ module I18n
 
         def start_polling
           Thread.new do
-            until stop_polling?
-              sleep(PhraseOta.config.poll_interval_seconds)
-              update_translations
-            end
+            sleep(PhraseOta.config.poll_interval_seconds)
+            update_translations
           end
-        end
-
-        def stop_polling?
-          false
         end
 
         def update_translations
@@ -97,8 +91,10 @@ module I18n
             url = "#{PhraseOta.config.ota_base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale}/yml"
             params = {
               app_version: PhraseOta.config.app_version,
-              client: "Phrase-OTA-Rails",
-              sdk_version: Phrase::Ota::Rails::VERSION
+              client: "ruby",
+              sdk_version: Phrase::Ota::Rails::VERSION,
+              current_version: 0, # TODO cache current version,
+              last_update: Time.now.to_i # TODO store last update timestamp
             }
             connection = Faraday.new do |faraday|
               faraday.use FaradayMiddleware::FollowRedirects
