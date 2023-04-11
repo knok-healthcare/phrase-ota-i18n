@@ -1,19 +1,17 @@
-require "i18n/backend/base"
+# require "i18n/backend/base"
 require "faraday"
 require "faraday_middleware"
 
 module I18n
   module Backend
     class PhraseOta
-      autoload :Configuration, "i18n/backend/phrase_ota/configuration"
-
       class << self
         def configure
           yield(config) if block_given?
         end
 
         def config
-          @config ||= Configuration.new
+          @config ||= I18n::Backend::Phrase::Ota::Configuration.new
         end
       end
 
@@ -22,8 +20,8 @@ module I18n
       end
 
       module Implementation
-        include Flatten
-        include Base
+        # include Flatten
+        # include Base
 
         def store_translations(locale, data, options = EMPTY_HASH)
           # TODO: Do we need this?
@@ -40,7 +38,7 @@ module I18n
         end
 
         def available_locales
-          @available_locales || set_available_locales
+          []
         end
 
         def reload!
@@ -62,10 +60,6 @@ module I18n
         end
 
         protected
-
-        def set_available_locales
-          @available_locales = translations.keys.map(&:to_sym)
-        end
 
         def lookup(locale, key, scope = [], options = EMPTY_HASH)
           init_translations unless initialized?
@@ -114,7 +108,7 @@ module I18n
             PhraseOta.config.logger.info("Fetching URL: #{url}")
 
             response = connection.get(url, params, {"User-Agent" => "Phrase-OTA-Rails #{Phrase::Ota::Rails::VERSION}"})
-            yaml = YAML.load(response.body)
+            yaml = YAML.safe_load(response.body)
             yaml.each do |yaml_locale, tree|
               store_translations(yaml_locale, tree || {})
             end
