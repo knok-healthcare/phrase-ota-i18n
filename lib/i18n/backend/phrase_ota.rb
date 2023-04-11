@@ -1,11 +1,11 @@
-require 'i18n/backend/base'
-require 'faraday'
-require 'faraday_middleware'
+require "i18n/backend/base"
+require "faraday"
+require "faraday_middleware"
 
 module I18n
   module Backend
     class PhraseOta
-      autoload :Configuration, 'i18n/backend/phrase_ota/configuration'
+      autoload :Configuration, "i18n/backend/phrase_ota/configuration"
 
       class << self
         def configure
@@ -22,7 +22,8 @@ module I18n
       end
 
       module Implementation
-        include Base, Flatten
+        include Flatten
+        include Base
 
         def store_translations(locale, data, options = EMPTY_HASH)
           # TODO: Do we need this?
@@ -61,20 +62,20 @@ module I18n
           @translations ||= {}
         end
 
-      protected
+        protected
 
         def lookup(locale, key, scope = [], options = EMPTY_HASH)
           init_translations unless initialized?
           keys = I18n.normalize_keys(locale, key, scope, options[:separator])
 
-          keys.inject(translations) do |result, _key|
+          keys.inject(translations) do |result, key|
             return nil unless result.is_a?(Hash)
-            unless result.has_key?(_key)
-              _key = _key.to_s.to_sym
-              return nil unless result.has_key?(_key)
+            unless result.has_key?(key)
+              key = key.to_s.to_sym
+              return nil unless result.has_key?(key)
             end
             result = result[_key]
-            result = resolve(locale, _key, result, options.merge(:scope => nil)) if result.is_a?(Symbol)
+            result = resolve(locale, _key, result, options.merge(scope: nil)) if result.is_a?(Symbol)
             result
           end
         end
@@ -96,11 +97,11 @@ module I18n
           PhraseOta.config.logger.info("Updating translations...")
 
           available_locales.each do |locale|
-            url = "#{PhraseOta.config.ota_base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale.to_s}/yml"
+            url = "#{PhraseOta.config.ota_base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale}/yml"
             params = {
               app_version: PhraseOta.config.app_version,
               client: "Phrase-OTA-Rails",
-              sdk_version: Phrase::Ota::Rails::VERSION,
+              sdk_version: Phrase::Ota::Rails::VERSION
             }
             connection = Faraday.new do |faraday|
               faraday.use FaradayMiddleware::FollowRedirects
@@ -109,7 +110,7 @@ module I18n
 
             PhraseOta.config.logger.info("Fetching URL: #{url}")
 
-            response = connection.get(url, params, { 'User-Agent' => "Phrase-OTA-Rails #{Phrase::Ota::Rails::VERSION}" })
+            response = connection.get(url, params, {"User-Agent" => "Phrase-OTA-Rails #{Phrase::Ota::Rails::VERSION}"})
             yaml = YAML.load(response.body)
             yaml.each do |yaml_locale, tree|
               store_translations(yaml_locale, tree || {})

@@ -1,4 +1,4 @@
-require 'i18n/backend/phrase_ota'
+require "i18n/backend/phrase_ota"
 
 I18n.backend = I18n::Backend::Chain.new(I18n::Backend::PhraseOta.new, I18n::Backend::Simple.new)
 
