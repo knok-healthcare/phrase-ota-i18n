@@ -8,6 +8,7 @@ module I18n
         attr_accessor :app_version
         attr_accessor :poll_interval_seconds
         attr_accessor :ota_base_url
+        attr_accessor :datacenter
 
         def initialize
           @distribution_id = nil
@@ -16,6 +17,7 @@ module I18n
           @app_version = nil
           @poll_interval_seconds = 5
           @ota_base_url = "http://localhost:8081"
+          @datacenter = "eu" # TODO support both datacenters
         end
       end
     end

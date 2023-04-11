@@ -14,7 +14,7 @@
 #
 # See https://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 
-require 'phrase/ota/rails'
+require "phrase/ota/rails"
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
