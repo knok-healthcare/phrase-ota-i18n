@@ -1,6 +1,8 @@
-# require "i18n/backend/base"
+require "i18n/backend/base"
 require "faraday"
 require "faraday_middleware"
+
+require_relative "phrase_ota/configuration"
 
 module I18n
   module Backend
@@ -11,7 +13,7 @@ module I18n
         end
 
         def config
-          @config ||= I18n::Backend::Phrase::Ota::Configuration.new
+          @config ||= Configuration.new
         end
       end
 
@@ -20,10 +22,9 @@ module I18n
       end
 
       module Implementation
-        # include Flatten
-        # include Base
+        include Base
 
-        def store_translations(locale, data, options = EMPTY_HASH)
+        def store_translations(locale, data, _options = EMPTY_HASH)
           # TODO: Do we need this?
           # if I18n.enforce_available_locales &&
           #   I18n.available_locales_initialized? &&
@@ -38,7 +39,7 @@ module I18n
         end
 
         def available_locales
-          []
+          PhraseOta.config.available_locales
         end
 
         def reload!
@@ -67,6 +68,7 @@ module I18n
 
           keys.inject(translations) do |result, key|
             return nil unless result.is_a?(Hash)
+
             unless result.has_key?(key)
               key = key.to_s.to_sym
               return nil unless result.has_key?(key)
@@ -79,13 +81,15 @@ module I18n
 
         def start_polling
           Thread.new do
-            sleep(PhraseOta.config.poll_interval_seconds)
-            update_translations
+            loop do
+              sleep(PhraseOta.config.poll_interval_seconds)
+              update_translations
+            end
           end
         end
 
         def update_translations
-          PhraseOta.config.logger.info("Updating translations...")
+          PhraseOta.config.logger.info("Phrase: Updating translations...")
 
           available_locales.each do |locale|
             url = "#{PhraseOta.config.ota_base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale}/yml"
@@ -93,8 +97,8 @@ module I18n
               app_version: PhraseOta.config.app_version,
               client: "ruby",
               sdk_version: Phrase::Ota::Rails::VERSION,
-              current_version: 0, # TODO cache current version,
-              last_update: Time.now.to_i # TODO store last update timestamp
+              current_version: 0, # TODO: cache current version,
+              last_update: Time.now.to_i # TODO: store last update timestamp
             }
             connection = Faraday.new do |faraday|
               faraday.use FaradayMiddleware::FollowRedirects
@@ -104,9 +108,12 @@ module I18n
             PhraseOta.config.logger.info("Fetching URL: #{url}")
 
             response = connection.get(url, params, {"User-Agent" => "Phrase-OTA-Rails #{Phrase::Ota::Rails::VERSION}"})
-            yaml = YAML.safe_load(response.body)
-            yaml.each do |yaml_locale, tree|
-              store_translations(yaml_locale, tree || {})
+
+            if response.status == 200
+              yaml = YAML.safe_load(response.body)
+              yaml.each do |yaml_locale, tree|
+                store_translations(yaml_locale, tree || {})
+              end
             end
           end
         end

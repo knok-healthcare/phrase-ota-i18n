@@ -9,6 +9,7 @@ module I18n
         attr_accessor :poll_interval_seconds
         attr_accessor :ota_base_url
         attr_accessor :datacenter
+        attr_accessor :available_locales
 
         def initialize
           @distribution_id = nil
@@ -16,8 +17,9 @@ module I18n
           @logger = Rails.logger
           @app_version = nil
           @poll_interval_seconds = 5
-          @ota_base_url = "http://localhost:8081"
+          @ota_base_url = "https://ota.phraseapp.com"
           @datacenter = "eu" # TODO support both datacenters
+          @available_locales = []
         end
       end
     end
