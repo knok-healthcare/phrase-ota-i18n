@@ -1,6 +1,7 @@
 require "i18n/backend/phrase_ota"
 
-I18n.backend = I18n::Backend::Chain.new(I18n::Backend::PhraseOta.new, I18n::Backend::Simple.new)
+default_backend = I18n::Backend::Simple.new
+I18n.backend = I18n::Backend::Chain.new(I18n::Backend::PhraseOta.new, default_backend)
 
 I18n::Backend::PhraseOta.configure do |config|
   # Phrase OTA Distribution ID
@@ -14,4 +15,7 @@ I18n::Backend::PhraseOta.configure do |config|
 
   # App version, set to nil if you do not want to use app version restriction
   config.app_version = nil
+
+  # Available locales that will be updated over-the-air
+  config.available_locales = default_backend.available_locales
 end

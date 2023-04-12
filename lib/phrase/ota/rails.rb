@@ -1,3 +1,2 @@
 require "phrase/ota/rails/version"
-
-require_relative "../../i18n/backend/phrase_ota"
+require "i18n/backend/phrase_ota"
