@@ -1,0 +1,17 @@
+name: Test
+on: [push]
+jobs:
+  rspec:
+    name: RSpec
+    runs-on: ubuntu-latest
+    env:
+      RAILS_ENV: test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Ruby
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
+        with:
+          bundler-cache: true
+      - name: RSpec
+        run: bundle exec rspec spec/

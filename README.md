@@ -1,4 +1,4 @@
-# Phrase::Ota::Rails
+# phrase-ota-rails
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/phrase/ota/rails`. To experiment with that code, run `bin/console` for an interactive prompt.
 
@@ -22,7 +22,10 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Generate config:
+
+    bundle exec rails generate phrase_ota_rails:install --distribution-id <DISTRIBUTION_ID> --secret-token <SECRET>
+
 
 ## Development
 
@@ -32,13 +35,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/docstun/phrase-ota-rails. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/docstun/phrase-ota-rails/blob/master/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/phrase/phrase-ota-rails.
 
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Phrase::Ota::Rails project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/docstun/phrase-ota-rails/blob/master/CODE_OF_CONDUCT.md).

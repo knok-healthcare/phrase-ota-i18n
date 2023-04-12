@@ -1,0 +1,15 @@
+name: Lint
+on: [push]
+jobs:
+  standard:
+    name: standard
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Ruby
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
+        with:
+          bundler-cache: true
+      - name: standard
+        run: bundle exec standardrb --no-fix
