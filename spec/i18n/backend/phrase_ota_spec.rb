@@ -4,10 +4,10 @@ describe I18n::Backend::PhraseOta do
       config.available_locales = [:en, :de]
     end
 
-    backend = I18n::Backend::PhraseOta.new
+    subject { I18n::Backend::PhraseOta.new }
 
     it do
-      expect(backend.available_locales).to(eq([:en, :de]))
+      expect(subject.available_locales).to(eq([:en, :de]))
     end
   end
 end
