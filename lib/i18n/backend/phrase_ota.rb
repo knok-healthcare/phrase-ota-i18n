@@ -19,20 +19,6 @@ module I18n
         start_polling
       end
 
-      def store_translations(locale, data, _options = EMPTY_HASH)
-        # TODO: Do we need this?
-        # if I18n.enforce_available_locales &&
-        #   I18n.available_locales_initialized? &&
-        #   !I18n.locale_available?(locale)
-        #   return data
-        # end
-
-        locale = locale.to_sym
-        translations[locale] ||= Concurrent::Hash.new
-        data = data.deep_symbolize_keys
-        translations[locale].deep_merge!(data)
-      end
-
       def available_locales
         PhraseOta.config.available_locales
       end
@@ -50,29 +36,7 @@ module I18n
         @translations = {}
       end
 
-      def translations(do_init: false)
-        init_translations if do_init || !initialized?
-        @translations ||= {}
-      end
-
       protected
-
-      def lookup(locale, key, scope = [], options = EMPTY_HASH)
-        init_translations unless initialized?
-        keys = I18n.normalize_keys(locale, key, scope, options[:separator])
-
-        keys.inject(translations) do |result, key|
-          return nil unless result.is_a?(Hash)
-
-          unless result.has_key?(key)
-            key = key.to_s.to_sym
-            return nil unless result.has_key?(key)
-          end
-          result = result[key]
-          result = resolve(locale, key, result, options.merge(scope: nil)) if result.is_a?(Symbol)
-          result
-        end
-      end
 
       def start_polling
         Thread.new do
