@@ -23,17 +23,9 @@ module I18n
         PhraseOta.config.available_locales
       end
 
-      def reload!
-        @translations = nil
-        self
-      end
-
-      def initialized?
-        !@translations.nil?
-      end
-
       def init_translations
         @translations = {}
+        @initialized = true
       end
 
       protected
