@@ -48,8 +48,8 @@ module I18n
             app_version: PhraseOta.config.app_version,
             client: "ruby",
             sdk_version: Phrase::Ota::Rails::VERSION,
-            current_version: 0, # TODO: cache current version,
-            last_update: Time.now.to_i # TODO: store last update timestamp
+            current_version: 0 # TODO: cache current version,
+            # last_update: Time.now.to_i # TODO: store last update timestamp
           }
           connection = Faraday.new do |faraday|
             faraday.use FaradayMiddleware::FollowRedirects
