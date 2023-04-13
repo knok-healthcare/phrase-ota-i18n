@@ -43,7 +43,7 @@ module I18n
         PhraseOta.config.logger.info("Phrase: Updating translations...")
 
         available_locales.each do |locale|
-          url = "#{PhraseOta.config.ota_base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale}/yml"
+          url = "#{PhraseOta.config.base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale}/yml"
           params = {
             app_version: PhraseOta.config.app_version,
             client: "ruby",
