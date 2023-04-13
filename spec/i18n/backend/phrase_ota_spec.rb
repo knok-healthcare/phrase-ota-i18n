@@ -41,7 +41,7 @@ describe I18n::Backend::PhraseOta do
         subject.init_translations
 
         body_en = {"en" => {"lorem" => "Hello OTA"}}.to_yaml
-        url_en = "https://ota.phraseapp.com/#{distribution_id}/#{secret_token}/en/yml?app_version&client=ruby&current_version=0&sdk_version=0.1.0"
+        url_en = "https://ota.phraseapp.com/#{distribution_id}/#{secret_token}/en/yml?app_version&client=ruby&sdk_version=0.1.0"
         stub_request(:get, url_en)
           .to_return(status: 200, body: body_en, headers: {})
       end

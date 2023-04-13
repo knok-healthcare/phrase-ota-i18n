@@ -16,6 +16,7 @@ module I18n
       end
 
       def initialize
+        @current_version = nil
         start_polling
       end
 
@@ -47,24 +48,24 @@ module I18n
           params = {
             app_version: PhraseOta.config.app_version,
             client: "ruby",
-            sdk_version: Phrase::Ota::Rails::VERSION,
-            current_version: 0 # TODO: cache current version,
-            # last_update: Time.now.to_i # TODO: store last update timestamp
+            sdk_version: Phrase::Ota::Rails::VERSION
           }
+          params[:current_version] = @current_version unless @current_version.nil?
+
           connection = Faraday.new do |faraday|
             faraday.use FaradayMiddleware::FollowRedirects
             faraday.adapter Faraday.default_adapter
           end
 
-          PhraseOta.config.logger.info("Fetching URL: #{url}")
+          PhraseOta.config.logger.info("Phrase: Fetching URL: #{url}")
 
           response = connection.get(url, params, {"User-Agent" => "Phrase-OTA-Rails #{Phrase::Ota::Rails::VERSION}"})
+          next unless response.status == 200
 
-          if response.status == 200
-            yaml = YAML.safe_load(response.body)
-            yaml.each do |yaml_locale, tree|
-              store_translations(yaml_locale, tree || {})
-            end
+          @current_version = CGI.parse(URI(response.env.url).query)["version"].first.to_i
+          yaml = YAML.safe_load(response.body)
+          yaml.each do |yaml_locale, tree|
+            store_translations(yaml_locale, tree || {})
           end
         end
       end
