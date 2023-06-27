@@ -1,12 +1,12 @@
-describe I18n::Backend::Configuration do
+describe Phrase::Ota::Configuration do
   before do
-    I18n::Backend::PhraseOta.configure do |config|
+    Phrase::Ota.configure do |config|
       config.datacenter = datacenter
     end
   end
 
   after do
-    I18n::Backend::PhraseOta.configure do |config|
+    Phrase::Ota.configure do |config|
       config.datacenter = "eu"
     end
   end
@@ -16,7 +16,7 @@ describe I18n::Backend::Configuration do
       let(:datacenter) { "eu" }
 
       it do
-        expect(I18n::Backend::PhraseOta.config.base_url).to(eq("https://ota.phraseapp.com"))
+        expect(Phrase::Ota.config.base_url).to(eq("https://ota.phraseapp.com"))
       end
     end
 
@@ -24,7 +24,7 @@ describe I18n::Backend::Configuration do
       let(:datacenter) { "us" }
 
       it do
-        expect(I18n::Backend::PhraseOta.config.base_url).to(eq("https://us.ota.phrase.com"))
+        expect(Phrase::Ota.config.base_url).to(eq("https://us.ota.phrase.com"))
       end
     end
 
@@ -32,7 +32,7 @@ describe I18n::Backend::Configuration do
       let(:datacenter) { "fr" }
 
       it do
-        expect { I18n::Backend::PhraseOta.config.base_url }.to raise_error(I18n::Backend::UnknownDatacenterException)
+        expect { Phrase::Ota.config.base_url }.to raise_error(Phrase::Ota::UnknownDatacenterException)
       end
     end
   end

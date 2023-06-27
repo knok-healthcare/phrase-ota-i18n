@@ -1,9 +1,7 @@
-require "i18n/backend/phrase_ota"
-
 fallback_backend = I18n::Backend::Simple.new
-I18n.backend = I18n::Backend::Chain.new(I18n::Backend::PhraseOta.new, fallback_backend)
+I18n.backend = I18n::Backend::Chain.new(Phrase::Ota::Backend.new, fallback_backend)
 
-I18n::Backend::PhraseOta.configure do |config|
+Phrase::Ota.configure do |config|
   # Possible datacenter values are "eu" and "us". The distribution_id and secret_token need to match the datacenter
   config.datacenter = "eu"
 

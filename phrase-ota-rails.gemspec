@@ -1,8 +1,8 @@
-require_relative "lib/phrase/ota/rails/version"
+require_relative "lib/phrase/ota/version"
 
 Gem::Specification.new do |spec|
   spec.name = "phrase-ota-rails"
-  spec.version = Phrase::Ota::Rails::VERSION
+  spec.version = Phrase::Ota::VERSION
   spec.authors = ["Phrase"]
   spec.email = ["support@phrase.com"]
 

@@ -1,7 +1,7 @@
 require "logger"
 
-module I18n
-  module Backend
+module Phrase
+  module Ota
     class UnknownDatacenterException < StandardError; end
 
     class Configuration

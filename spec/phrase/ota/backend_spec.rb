@@ -1,12 +1,12 @@
 require "webmock/rspec"
 
-describe I18n::Backend::PhraseOta do
+describe Phrase::Ota::Backend do
   let(:distribution_id) { "123" }
   let(:secret_token) { "secret" }
   let(:available_locales) { %i[en de] }
 
   before do
-    I18n::Backend::PhraseOta.configure do |config|
+    Phrase::Ota.configure do |config|
       config.distribution_id = distribution_id
       config.secret_token = secret_token
       config.available_locales = available_locales
@@ -14,13 +14,13 @@ describe I18n::Backend::PhraseOta do
   end
 
   after do
-    I18n::Backend::PhraseOta.configure do |config|
+    Phrase::Ota.configure do |config|
       config.available_locales = []
     end
   end
 
   context "#available_locales" do
-    subject { I18n::Backend::PhraseOta.new }
+    subject { Phrase::Ota::Backend.new }
 
     it do
       expect(subject.available_locales).to(eq(%i[en de]))
@@ -34,7 +34,7 @@ describe I18n::Backend::PhraseOta do
     context "with OTA backend" do
       let(:available_locales) { [:en] }
 
-      subject { I18n::Backend::PhraseOta.new }
+      subject { Phrase::Ota::Backend.new }
 
       before do
         I18n.backend = subject
