@@ -34,9 +34,9 @@ module Phrase
       def datacenter_url
         case @datacenter.downcase
         when "eu"
-          "https://ota.phraseapp.com"
+          "https://ota.eu.phrase.com"
         when "us"
-          "https://us.ota.phrase.com"
+          "https://ota.us.phrase.com"
         else
           raise UnknownDatacenterException
         end

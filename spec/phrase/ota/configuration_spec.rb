@@ -16,7 +16,7 @@ describe Phrase::Ota::Configuration do
       let(:datacenter) { "eu" }
 
       it do
-        expect(Phrase::Ota.config.base_url).to(eq("https://ota.phraseapp.com"))
+        expect(Phrase::Ota.config.base_url).to(eq("https://ota.eu.phrase.com"))
       end
     end
 
@@ -24,7 +24,7 @@ describe Phrase::Ota::Configuration do
       let(:datacenter) { "us" }
 
       it do
-        expect(Phrase::Ota.config.base_url).to(eq("https://us.ota.phrase.com"))
+        expect(Phrase::Ota.config.base_url).to(eq("https://ota.us.phrase.com"))
       end
     end
 
