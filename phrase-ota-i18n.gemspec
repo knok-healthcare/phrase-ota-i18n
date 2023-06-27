@@ -1,14 +1,14 @@
 require_relative "lib/phrase/ota/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "phrase-ota-rails"
+  spec.name = "phrase-ota-i18n"
   spec.version = Phrase::Ota::VERSION
   spec.authors = ["Phrase"]
   spec.email = ["support@phrase.com"]
 
   spec.summary = "Phrase OTA for Rails i18n"
   spec.description = "Phrase OTA for Rails i18n"
-  spec.homepage = "https://github.com/phrase/phrase-ota-rails"
+  spec.homepage = "https://github.com/phrase/phrase-ota-i18n"
   spec.license = "MIT"
   spec.required_ruby_version = Gem::Requirement.new(">= 3.0.0")
 
