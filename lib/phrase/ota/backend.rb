@@ -2,26 +2,16 @@ require "faraday"
 require "faraday_middleware"
 require "i18n"
 
-require_relative "phrase_ota/configuration"
-
-module I18n
-  module Backend
-    class PhraseOta < I18n::Backend::Simple
-      def self.configure
-        yield(config) if block_given?
-      end
-
-      def self.config
-        @config ||= Configuration.new
-      end
-
+module Phrase
+  module Ota
+    class Backend < I18n::Backend::Simple
       def initialize
         @current_version = nil
         start_polling
       end
 
       def available_locales
-        PhraseOta.config.available_locales
+        Phrase::Ota.config.available_locales
       end
 
       def init_translations
@@ -34,21 +24,21 @@ module I18n
       def start_polling
         Thread.new do
           loop do
-            sleep(PhraseOta.config.poll_interval_seconds)
+            sleep(Phrase::Ota.config.poll_interval_seconds)
             update_translations
           end
         end
       end
 
       def update_translations
-        PhraseOta.config.logger.info("Phrase: Updating translations...")
+        Phrase::Ota.config.logger.info("Phrase: Updating translations...")
 
         available_locales.each do |locale|
-          url = "#{PhraseOta.config.base_url}/#{PhraseOta.config.distribution_id}/#{PhraseOta.config.secret_token}/#{locale}/yml"
+          url = "#{Phrase::Ota.config.base_url}/#{Phrase::Ota.config.distribution_id}/#{Phrase::Ota.config.secret_token}/#{locale}/yml"
           params = {
-            app_version: PhraseOta.config.app_version,
+            app_version: Phrase::Ota.config.app_version,
             client: "ruby",
-            sdk_version: Phrase::Ota::Rails::VERSION
+            sdk_version: Phrase::Ota::VERSION
           }
           params[:current_version] = @current_version unless @current_version.nil?
 
@@ -57,9 +47,9 @@ module I18n
             faraday.adapter Faraday.default_adapter
           end
 
-          PhraseOta.config.logger.info("Phrase: Fetching URL: #{url}")
+          Phrase::Ota.config.logger.info("Phrase: Fetching URL: #{url}")
 
-          response = connection.get(url, params, {"User-Agent" => "Phrase-OTA-Rails #{Phrase::Ota::Rails::VERSION}"})
+          response = connection.get(url, params, {"User-Agent" => "phrase-ota-rails #{Phrase::Ota::VERSION}"})
           next unless response.status == 200
 
           @current_version = CGI.parse(URI(response.env.url).query)["version"].first.to_i
