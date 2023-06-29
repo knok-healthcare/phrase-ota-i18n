@@ -1,15 +1,13 @@
-# phrase-ota-rails
+# phrase-ota-i18n
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/phrase/ota/rails`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Backend for the [I18n](https://github.com/ruby-i18n/i18n) gem to update translations over-the-air from [Phrase Strings](https://phrase.com)
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'phrase-ota-rails'
+gem 'phrase-ota-i18n'
 ```
 
 And then execute:
@@ -18,7 +16,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install phrase-ota-rails
+    $ gem install phrase-ota-i18n
 
 ## Usage
 
@@ -35,7 +33,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/phrase/phrase-ota-rails.
+Bug reports and pull requests are welcome on GitHub at https://github.com/phrase/phrase-ota-i18n.
 
 
 ## License

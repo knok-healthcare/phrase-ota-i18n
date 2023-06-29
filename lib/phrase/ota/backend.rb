@@ -49,7 +49,7 @@ module Phrase
 
           Phrase::Ota.config.logger.info("Phrase: Fetching URL: #{url}")
 
-          response = connection.get(url, params, {"User-Agent" => "phrase-ota-rails #{Phrase::Ota::VERSION}"})
+          response = connection.get(url, params, {"User-Agent" => "phrase-ota-i18n #{Phrase::Ota::VERSION}"})
           next unless response.status == 200
 
           @current_version = CGI.parse(URI(response.env.url).query)["version"].first.to_i

@@ -1,6 +1,6 @@
 source "https://rubygems.org"
 
-# Specify your gem's dependencies in phrase-ota-rails.gemspec
+# Specify your gem's dependencies in phrase-ota-i18n.gemspec
 gemspec
 
 gem "rake", "~> 12.0"
