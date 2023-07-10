@@ -1,3 +1,5 @@
+require "phrase/ota"
+
 fallback_backend = I18n::Backend::Simple.new
 I18n.backend = I18n::Backend::Chain.new(Phrase::Ota::Backend.new, fallback_backend)
 
