@@ -12,6 +12,7 @@ module Phrase
       attr_accessor :poll_interval_seconds
       attr_accessor :datacenter
       attr_accessor :available_locales
+      attr_accessor :debug
       attr_writer :base_url
 
       def initialize
@@ -23,6 +24,7 @@ module Phrase
         @datacenter = "eu"
         @available_locales = []
         @base_url = nil
+        @debug = false
       end
 
       def base_url

@@ -31,7 +31,7 @@ module Phrase
       end
 
       def update_translations
-        Phrase::Ota.config.logger.info("Phrase: Updating translations...")
+        log("Phrase: Updating translations...")
 
         available_locales.each do |locale|
           url = "#{Phrase::Ota.config.base_url}/#{Phrase::Ota.config.distribution_id}/#{Phrase::Ota.config.secret_token}/#{locale}/yml"
@@ -47,7 +47,7 @@ module Phrase
             faraday.adapter Faraday.default_adapter
           end
 
-          Phrase::Ota.config.logger.info("Phrase: Fetching URL: #{url}")
+          log("Phrase: Fetching URL: #{url}")
 
           response = connection.get(url, params, {"User-Agent" => "phrase-ota-i18n #{Phrase::Ota::VERSION}"})
           next unless response.status == 200
@@ -58,6 +58,10 @@ module Phrase
             store_translations(yaml_locale, tree || {})
           end
         end
+      end
+
+      def log(message)
+        Phrase::Ota.config.logger.info(message) if Phrase::Ota.config.debug
       end
     end
   end
