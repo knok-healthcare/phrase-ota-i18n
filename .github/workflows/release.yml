@@ -1,0 +1,36 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: GoogleCloudPlatform/release-please-action@ca6063f4ed81b55db15b8c42d1b6f7925866342d # pin@3.7.11
+        with:
+          release-type: ruby
+          package-name: phrase-ota-i18n
+          version-file: "lib/phrase/ota/version.rb"
+      - uses: actions/checkout@v3
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939 #pin@v1.152.0
+        with:
+          ruby-version: 3.2.2
+        if: ${{ steps.release.outputs.release_created }}
+      - run: bundle install
+        if: ${{ steps.release.outputs.release_created }}
+      - name: publish gem
+        run: |
+          mkdir -p $HOME/.gem
+          touch $HOME/.gem/credentials
+          chmod 0600 $HOME/.gem/credentials
+          printf -- "---\n:rubygems_api_key: ${GEM_HOST_API_KEY}\n" > $HOME/.gem/credentials
+          gem build phrase-ota-i18n.gemspec
+          gem push *.gem
+        env:
+          GEM_HOST_API_KEY: "${{secrets.RUBYGEMS_TOKEN}}"
+        if: ${{ steps.release.outputs.release_created }}
+
+
