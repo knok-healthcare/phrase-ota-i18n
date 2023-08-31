@@ -5,23 +5,27 @@ describe Phrase::Ota::Backend do
   let(:secret_token) { "secret" }
   let(:available_locales) { %i[en de] }
 
+  subject { I18n.backend }
+
   before do
     Phrase::Ota.configure do |config|
       config.distribution_id = distribution_id
       config.secret_token = secret_token
       config.available_locales = available_locales
     end
+
+    @previous_backend = I18n.backend
+    I18n.backend = Phrase::Ota::Backend.new
   end
 
   after do
     Phrase::Ota.configure do |config|
       config.available_locales = []
     end
+    I18n.backend = @previous_backend
   end
 
   context "#available_locales" do
-    subject { Phrase::Ota::Backend.new }
-
     it do
       expect(subject.available_locales).to(eq(%i[en de]))
     end
@@ -33,23 +37,39 @@ describe Phrase::Ota::Backend do
 
     context "with OTA backend" do
       let(:available_locales) { [:en] }
+      let(:body_en) { {"en" => {"lorem" => "Hello OTA"}}.to_yaml }
+      let(:url_en) { "https://ota.eu.phrase.com/#{distribution_id}/#{secret_token}/en/yml?app_version&client=ruby&sdk_version=#{Phrase::Ota::VERSION}" }
 
-      subject { Phrase::Ota::Backend.new }
+      context "translations should be updated" do
+        before do
+          stub_request(:get, url_en).to_return(status: 200, body: body_en, headers: {})
+        end
 
-      before do
-        I18n.backend = subject
-        subject.init_translations
-
-        body_en = {"en" => {"lorem" => "Hello OTA"}}.to_yaml
-        url_en = "https://ota.eu.phrase.com/#{distribution_id}/#{secret_token}/en/yml?app_version&client=ruby&sdk_version=#{Phrase::Ota::VERSION}"
-        stub_request(:get, url_en)
-          .to_return(status: 200, body: body_en, headers: {})
+        it do
+          subject.send(:update_translations)
+          expect(I18n.t(:lorem, locale: :en)).to eq("Hello OTA")
+        end
       end
 
-      it do
-        subject.send(:update_translations)
+      context "init_translations should not reset translations" do
+        let(:url_en_2) { "https://ota.eu.phrase.com/#{distribution_id}/#{secret_token}/en/yml?app_version&client=ruby&current_version=0&sdk_version=#{Phrase::Ota::VERSION}" }
+        let(:body_en_2) { {"en" => {"lorem" => "Hello OTA New"}}.to_yaml }
 
-        expect(I18n.t(:lorem, locale: :en)).to eq("Hello OTA")
+        before do
+          stub_request(:get, url_en).to_return(status: 200, body: body_en, headers: {})
+          stub_request(:get, url_en_2).to_return(status: 200, body: body_en_2, headers: {})
+        end
+
+        it do
+          subject.send(:update_translations)
+          expect(I18n.t(:lorem, locale: :en)).to eq("Hello OTA")
+
+          subject.init_translations
+          expect(I18n.t(:lorem, locale: :en)).to eq("Hello OTA")
+
+          subject.send(:update_translations)
+          expect(I18n.t(:lorem, locale: :en)).to eq("Hello OTA New")
+        end
       end
     end
   end

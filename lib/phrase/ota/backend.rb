@@ -7,6 +7,7 @@ module Phrase
     class Backend < I18n::Backend::Simple
       def initialize
         @current_version = nil
+        @initialized = true # initializing immeditaly as we don't want to wait until all OTA translations have been fetched
         start_polling
       end
 
@@ -15,8 +16,6 @@ module Phrase
       end
 
       def init_translations
-        @translations = {}
-        @initialized = true
       end
 
       protected
