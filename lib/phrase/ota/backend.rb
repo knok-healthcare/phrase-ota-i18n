@@ -30,7 +30,7 @@ module Phrase
       end
 
       def update_translations
-        log("Updating translations...")
+        log("Updating translations for locales: #{available_locales}")
 
         available_locales.each do |locale|
           params = {
@@ -38,7 +38,7 @@ module Phrase
             client: "ruby",
             sdk_version: Phrase::Ota::VERSION
           }
-          current_version = @current_locale_versions[locale]
+          current_version = @current_locale_versions[locale_cache_key(locale)]
           params[:current_version] = current_version unless current_version.nil?
 
           connection = Faraday.new do |faraday|
@@ -54,13 +54,17 @@ module Phrase
           response = connection.get(url, {}, {"User-Agent" => "phrase-ota-i18n #{Phrase::Ota::VERSION}"})
           next unless response.status == 200
 
-          @current_locale_versions[locale] = CGI.parse(URI(response.env.url).query)["version"].first.to_i
+          @current_locale_versions[locale_cache_key(locale)] = CGI.parse(URI(response.env.url).query)["version"].first.to_i
           yaml = YAML.safe_load(response.body)
           yaml.each do |yaml_locale, tree|
             store_translations(locale, tree || {})
             log("Updated locale: #{locale}")
           end
         end
+      end
+
+      def locale_cache_key(locale)
+        "#{Phrase::Ota.config.distribution_id}/#{Phrase::Ota.config.secret_token}/#{locale}"
       end
 
       def log(message)
