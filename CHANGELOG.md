@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/phrase/phrase-ota-i18n/compare/v1.0.0...v1.0.1) (2023-09-04)
+
+
+### Bug Fixes
+
+* translations are kept on backend init ([1ac31cc](https://github.com/phrase/phrase-ota-i18n/commit/1ac31cc4cb7cfc6f6ce186a80dd26a19a8bdc844))
+
 ## 1.0.0 (2023-08-07)
 
 
