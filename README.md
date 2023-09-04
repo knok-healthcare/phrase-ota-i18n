@@ -22,7 +22,7 @@ Or install it yourself as:
 
 Generate config:
 
-    bundle exec rails generate phrase_ota_rails:install --distribution-id <DISTRIBUTION_ID> --secret-token <SECRET>
+    bundle exec rails generate phrase_ota:install --distribution-id <DISTRIBUTION_ID> --secret-token <SECRET>
 
 
 ## Development
