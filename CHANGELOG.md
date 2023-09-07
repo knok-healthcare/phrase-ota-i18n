@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/phrase/phrase-ota-i18n/compare/v1.0.1...v1.0.2) (2023-09-07)
+
+
+### Bug Fixes
+
+* store current_version per locale ([3d23407](https://github.com/phrase/phrase-ota-i18n/commit/3d234072a8631577280fee280b93abb3e1cd2e2b))
+* use unique cache key per distribution and locale ([ea25cd5](https://github.com/phrase/phrase-ota-i18n/commit/ea25cd5172c41bdaccef57a0f0a66a3a39790b11))
+
 ## [1.0.1](https://github.com/phrase/phrase-ota-i18n/compare/v1.0.0...v1.0.1) (2023-09-04)
 
 
