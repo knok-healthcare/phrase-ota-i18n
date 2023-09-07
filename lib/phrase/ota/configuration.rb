@@ -9,7 +9,7 @@ module Phrase
       attr_accessor :secret_token
       attr_accessor :logger
       attr_accessor :app_version
-      attr_accessor :poll_interval_seconds
+      attr_accessor :poll_interval
       attr_accessor :datacenter
       attr_accessor :available_locales
       attr_accessor :debug
@@ -20,7 +20,7 @@ module Phrase
         @secret_token = nil
         @logger = Logger.new($stdout)
         @app_version = nil
-        @poll_interval_seconds = 60
+        @poll_interval = 60
         @datacenter = "eu"
         @available_locales = []
         @base_url = nil

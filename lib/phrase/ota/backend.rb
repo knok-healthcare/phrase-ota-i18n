@@ -6,7 +6,7 @@ module Phrase
   module Ota
     class Backend < I18n::Backend::Simple
       def initialize
-        @current_version = nil
+        @current_locale_versions = {}
         @initialized = true # initializing immeditaly as we don't want to wait until all OTA translations have been fetched
         start_polling
       end
@@ -23,44 +23,52 @@ module Phrase
       def start_polling
         Thread.new do
           loop do
-            sleep(Phrase::Ota.config.poll_interval_seconds)
+            sleep(Phrase::Ota.config.poll_interval)
             update_translations
           end
         end
       end
 
       def update_translations
-        log("Phrase: Updating translations...")
+        log("Updating translations for locales: #{available_locales}")
 
         available_locales.each do |locale|
-          url = "#{Phrase::Ota.config.base_url}/#{Phrase::Ota.config.distribution_id}/#{Phrase::Ota.config.secret_token}/#{locale}/yml"
           params = {
             app_version: Phrase::Ota.config.app_version,
             client: "ruby",
             sdk_version: Phrase::Ota::VERSION
           }
-          params[:current_version] = @current_version unless @current_version.nil?
+          current_version = @current_locale_versions[locale_cache_key(locale)]
+          params[:current_version] = current_version unless current_version.nil?
 
           connection = Faraday.new do |faraday|
             faraday.use FaradayMiddleware::FollowRedirects
             faraday.adapter Faraday.default_adapter
           end
 
-          log("Phrase: Fetching URL: #{url}")
+          uri = URI("#{Phrase::Ota.config.base_url}/#{Phrase::Ota.config.distribution_id}/#{Phrase::Ota.config.secret_token}/#{locale}/yml")
+          uri.query = URI.encode_www_form(params)
+          url = uri.to_s
+          log("Request URL: #{url}")
 
-          response = connection.get(url, params, {"User-Agent" => "phrase-ota-i18n #{Phrase::Ota::VERSION}"})
+          response = connection.get(url, {}, {"User-Agent" => "phrase-ota-i18n #{Phrase::Ota::VERSION}"})
           next unless response.status == 200
 
-          @current_version = CGI.parse(URI(response.env.url).query)["version"].first.to_i
+          @current_locale_versions[locale_cache_key(locale)] = CGI.parse(URI(response.env.url).query)["version"].first.to_i
           yaml = YAML.safe_load(response.body)
           yaml.each do |yaml_locale, tree|
-            store_translations(yaml_locale, tree || {})
+            store_translations(locale, tree || {})
+            log("Updated locale: #{locale}")
           end
         end
       end
 
+      def locale_cache_key(locale)
+        "#{Phrase::Ota.config.distribution_id}/#{Phrase::Ota.config.secret_token}/#{locale}"
+      end
+
       def log(message)
-        Phrase::Ota.config.logger.info(message) if Phrase::Ota.config.debug
+        Phrase::Ota.config.logger.info("Phrase OTA: #{message}") if Phrase::Ota.config.debug
       end
     end
   end
