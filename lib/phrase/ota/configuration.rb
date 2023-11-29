@@ -13,6 +13,7 @@ module Phrase
       attr_accessor :datacenter
       attr_accessor :available_locales
       attr_accessor :debug
+      attr_accessor :yaml_permitted_classes
       attr_writer :base_url
 
       def initialize
@@ -25,6 +26,7 @@ module Phrase
         @available_locales = []
         @base_url = nil
         @debug = false
+        @yaml_permitted_classes = []
       end
 
       def base_url

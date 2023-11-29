@@ -55,7 +55,7 @@ module Phrase
           next unless response.status == 200
 
           @current_locale_versions[locale_cache_key(locale)] = CGI.parse(URI(response.env.url).query)["version"].first.to_i
-          yaml = YAML.safe_load(response.body)
+          yaml = YAML.safe_load(response.body, permitted_classes: Phrase::Ota.config.yaml_permitted_classes)
           yaml.each do |yaml_locale, tree|
             store_translations(locale, tree || {})
             log("Updated locale: #{locale}")
