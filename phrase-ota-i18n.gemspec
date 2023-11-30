@@ -25,5 +25,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "i18n"
   spec.add_dependency "faraday"
-  spec.add_dependency "faraday_middleware"
+  spec.add_dependency "faraday-follow_redirects"
 end
