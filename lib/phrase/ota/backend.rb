@@ -1,5 +1,5 @@
 require "faraday"
-require 'faraday/follow_redirects'
+require "faraday/follow_redirects"
 require "i18n"
 
 module Phrase
