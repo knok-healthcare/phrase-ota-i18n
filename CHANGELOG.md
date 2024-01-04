@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/phrase/phrase-ota-i18n/compare/v1.0.2...v1.0.3) (2023-12-04)
+
+
+### Bug Fixes
+
+* support faraday 2.x ([3949d3a](https://github.com/phrase/phrase-ota-i18n/commit/3949d3afc32bddbdc893e0b39d6bddfb622a5748))
+
 ## [1.0.2](https://github.com/phrase/phrase-ota-i18n/compare/v1.0.1...v1.0.2) (2023-09-07)
 
 

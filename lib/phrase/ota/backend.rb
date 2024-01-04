@@ -1,5 +1,5 @@
 require "faraday"
-require "faraday_middleware"
+require "faraday/follow_redirects"
 require "i18n"
 
 module Phrase
@@ -42,7 +42,7 @@ module Phrase
           params[:current_version] = current_version unless current_version.nil?
 
           connection = Faraday.new do |faraday|
-            faraday.use FaradayMiddleware::FollowRedirects
+            faraday.response :follow_redirects
             faraday.adapter Faraday.default_adapter
           end
 
