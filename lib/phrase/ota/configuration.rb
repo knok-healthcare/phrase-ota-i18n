@@ -14,6 +14,7 @@ module Phrase
       attr_accessor :available_locales
       attr_accessor :debug
       attr_accessor :yaml_permitted_classes
+      attr_accessor :fetch_translations_on_boot
       attr_writer :base_url
 
       def initialize
@@ -27,6 +28,7 @@ module Phrase
         @base_url = nil
         @debug = false
         @yaml_permitted_classes = []
+        @fetch_translations_on_boot = false
       end
 
       def base_url

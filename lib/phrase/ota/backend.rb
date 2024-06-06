@@ -22,6 +22,10 @@ module Phrase
 
       def start_polling
         Thread.new do
+          if Phrase::Ota.config.fetch_translations_on_boot
+            update_translations
+          end
+
           loop do
             sleep(Phrase::Ota.config.poll_interval)
             update_translations
