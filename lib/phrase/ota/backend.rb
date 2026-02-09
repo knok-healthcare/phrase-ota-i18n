@@ -41,7 +41,7 @@ module Phrase
           current_version = @current_locale_versions[locale_cache_key(locale)]
           params[:current_version] = current_version unless current_version.nil?
 
-          connection = Faraday.new do |faraday|
+          connection = Faraday.new(ssl: { max_version: OpenSSL::SSL::TLS1_2_VERSION }) do |faraday|
             faraday.response :follow_redirects
             faraday.adapter Faraday.default_adapter
           end
